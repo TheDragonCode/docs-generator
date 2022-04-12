@@ -23,7 +23,8 @@ class Package
         $files = [];
 
         foreach ($this->getNamespaces() as $namespace => $directory) {
-            $names = File::names($this->getAppPath($directory),
+            $names = File::names(
+                $this->getAppPath($directory),
                 static fn (string $file) => Str::endsWith($file, '.php'),
                 recursive: true
             );
@@ -31,11 +32,12 @@ class Package
             $names = Arr::of($names)
                 ->unique()
                 ->flip()
-                ->map(static fn (string $class, string $file) => Str::of($file)
-                    ->before('.php')
-                    ->replace('/', '\\')
-                    ->prepend($namespace)
-                    ->toString()
+                ->map(
+                    static fn (string $class, string $file) => Str::of($file)
+                ->before('.php')
+                ->replace('/', '\\')
+                ->prepend($namespace)
+                ->toString()
                 )
                 ->filter(fn ($file) => $this->allowFile($file))
                 ->toArray();

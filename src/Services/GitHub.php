@@ -44,7 +44,7 @@ class GitHub
         while ($repos = $this->client->organization()->repositories($organization, 'public', $page)) {
             $repositories = array_merge($repositories, $repos);
 
-            $page++;
+            ++$page;
         }
 
         return $repositories;
