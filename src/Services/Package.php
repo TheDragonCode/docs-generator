@@ -34,10 +34,10 @@ class Package
                 ->flip()
                 ->map(
                     static fn (string $class, string $file) => Str::of($file)
-                ->before('.php')
-                ->replace('/', '\\')
-                ->prepend($namespace)
-                ->toString()
+                        ->before('.php')
+                        ->replace('/', '\\')
+                        ->prepend($namespace)
+                        ->toString()
                 )
                 ->filter(fn ($file) => $this->allowFile($file))
                 ->toArray();
