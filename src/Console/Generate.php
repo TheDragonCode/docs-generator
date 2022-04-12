@@ -24,7 +24,8 @@ class Generate extends Command
 
     protected function configure()
     {
-        return parent::configure()->addOption('docs-dir',
+        return parent::configure()->addOption(
+            'docs-dir',
             mode       : InputOption::VALUE_OPTIONAL,
             description: 'Specifies a different path for generating documentation'
         );
