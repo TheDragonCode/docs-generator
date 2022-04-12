@@ -14,7 +14,7 @@ class Download extends Command
 
     protected string $description = 'Download repositories for the document generation';
 
-    protected string $tmp_path = __DIR__ . '/../../temp';
+    protected string $tmp_path = './temp';
 
     protected function configure()
     {
