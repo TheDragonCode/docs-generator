@@ -16,7 +16,7 @@ class GenerateTest extends TestCase
 
         $bin = realpath(__DIR__ . '/../bin/docs');
 
-        exec('php ' . $bin . ' generate --docs-dir=' . $this->docs_path, $output);
+        $output = $this->exec('php ' . $bin . ' generate --docs-dir=' . $this->docs_path);
 
         $this->assertSame([
             Message::PREPARE_GENERATE(),
