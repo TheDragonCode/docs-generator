@@ -3,51 +3,59 @@
 namespace DragonCode\DocsGenerator\Console;
 
 use DragonCode\DocsGenerator\Dto\FileInfo;
+use DragonCode\DocsGenerator\Enum\Message;
 use DragonCode\DocsGenerator\Processors\Helper;
+use DragonCode\DocsGenerator\Services\Package;
 use DragonCode\Support\Facades\Filesystem\Directory;
 use DragonCode\Support\Facades\Filesystem\File;
 use DragonCode\Support\Facades\Helpers\Str;
 use JetBrains\PhpStorm\Pure;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputOption;
 
 class Generate extends Command
 {
-    protected string $docs_path = __DIR__ . '/../../docs';
+    protected string $signature = 'generate';
+
+    protected string $description = 'Document generation';
+
+    protected string $base_path = '.';
+
+    protected string $docs_path = './docs';
 
     protected function configure()
     {
-        $this
-            ->setName('generate')
-            ->setDescription('Generate docs');
+        return parent::configure()->addOption('docs-dir',
+            mode       : InputOption::VALUE_OPTIONAL,
+            description: 'Specifies a different path for generating documentation'
+        );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function handle(): void
     {
-        $this->prepare($output);
-        $this->generateHelpers($output);
+        $this->prepare();
 
-        return 0;
+        $package = $this->package();
+
+        $this->generate($package);
     }
 
-    protected function prepare(OutputInterface $output): void
+    protected function prepare(): void
     {
-        $output->writeln('Prepare docs generating...');
+        $this->output->writeln(Message::PREPARE_GENERATE());
 
-        Directory::ensureDelete($this->docs_path);
+        Directory::ensureDelete($this->docsPath());
     }
 
-    protected function generateHelpers(OutputInterface $output): void
+    protected function generate(Package $package): void
     {
-        foreach ($this->files() as $file) {
-            $output->writeln('Processing file ' . $file . '...');
+        foreach ($package->files() as $file => $class) {
+            $this->output->writeln(Message::PROCESSING($class));
 
-            $dto = $this->dto($file);
+            $info = $this->info($file);
 
-            $path = $this->targetPath($dto->dirname(), $dto->filename());
+            $path = $this->targetPath($info->dirname(), $info->filename());
 
-            $content = $this->getContent($dto->source(), $dto->header());
+            $content = $this->getContent($class);
 
             $this->store($path, $content);
         }
@@ -58,20 +66,21 @@ class Generate extends Command
         File::store($path, $content);
     }
 
-    protected function getContent(string $path, string $header): string
+    protected function getContent(string $class): string
     {
-        return Helper::make($path, $header)->get();
+        return Helper::make($class)->get();
     }
 
     #[Pure]
-    protected function dto(string $file): FileInfo
+    protected function info(string $filename): FileInfo
     {
-        return new FileInfo($this->basePath(), $file);
+        return new FileInfo($this->docsPath(), $filename);
     }
 
-    protected function files(): array
+    #[Pure]
+    protected function package(): Package
     {
-        return File::names($this->basePath(), static fn ($path) => ! Str::startsWith($path, ['Concerns', 'Exceptions', 'Facades']), true);
+        return new Package($this->basePath());
     }
 
     protected function targetPath(string $directory, string $filename): string
@@ -86,13 +95,11 @@ class Generate extends Command
 
     protected function basePath(): string
     {
-        return realpath('.');
+        return realpath($this->base_path);
     }
 
     protected function docsPath(): string
     {
-        return Str::of($this->basePath())
-            ->end(DIRECTORY_SEPARATOR)
-            ->append('docs');
+        return $this->input->getOption('docs-dir') ?: $this->docs_path;
     }
 }

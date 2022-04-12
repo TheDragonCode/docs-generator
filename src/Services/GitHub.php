@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DragonCode\DocsGenerator\Helpers;
+namespace DragonCode\DocsGenerator\Services;
 
 use DragonCode\Support\Facades\Helpers\Arr;
 use DragonCode\Support\Facades\Helpers\Str;
@@ -16,11 +16,25 @@ class GitHub
     ) {
     }
 
+    /**
+     * Get a filtered list of repositories for the selected organization.
+     *
+     * @param string $organization
+     *
+     * @return array
+     */
     public function repositories(string $organization): array
     {
         return Arr::filter($this->all($organization), fn (array $org): bool => $this->allow($org));
     }
 
+    /**
+     * Get the entire list of repositories for the selected organization.
+     *
+     * @param string $organization
+     *
+     * @return array
+     */
     public function all(string $organization): array
     {
         $repositories = [];
@@ -36,6 +50,14 @@ class GitHub
         return $repositories;
     }
 
+    /**
+     * Clone repository for further processing.
+     *
+     * @param string $ssh_url
+     * @param string $directory
+     *
+     * @return void
+     */
     public function download(string $ssh_url, string $directory): void
     {
         exec('git clone ' . $ssh_url . ' ' . $directory);

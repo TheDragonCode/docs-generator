@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-use DragonCode\DocsGenerator\Console\Download;
+use DragonCode\DocsGenerator\Console\Compile;
 use DragonCode\DocsGenerator\Console\Generate;
 use Symfony\Component\Console\Application;
 
@@ -36,7 +36,7 @@ require_once $file;
 
 $application = new Application('The Dragon Code: Document Generator');
 
-$application->add(new Download());
+$application->add(new Compile());
 $application->add(new Generate());
 
 $application->run();

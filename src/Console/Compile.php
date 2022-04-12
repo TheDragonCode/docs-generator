@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace DragonCode\DocsGenerator\Console;
 
+use DragonCode\DocsGenerator\Enum\Message;
 use DragonCode\DocsGenerator\Facades\GitHub;
 use DragonCode\Support\Facades\Filesystem\Directory;
 use DragonCode\Support\Facades\Helpers\Arr;
 
-class Download extends Command
+class Compile extends Command
 {
-    protected string $signature = 'download';
+    protected string $signature = 'compile';
 
-    protected string $description = 'Download repositories for the document generation';
-
-    protected string $tmp_path = './temp';
+    protected string $description = 'Download repositories and compile documentation';
 
     protected function configure()
     {
@@ -38,7 +37,7 @@ class Download extends Command
             $url  = Arr::get($repository, 'ssh_url');
             $name = Arr::get($repository, 'name');
 
-            $this->output->writeln("Downloading $name...");
+            $this->output->writeln(Message::DOWNLOADING($name));
 
             $this->download($url, $name);
         }
@@ -55,7 +54,7 @@ class Download extends Command
 
     protected function getRepositories(): array
     {
-        $this->output->writeln('Receiving repositories list...');
+        $this->output->writeln(Message::RECEIVING_REPOSITORIES());
 
         return GitHub::repositories($this->getOrganization());
     }

@@ -14,6 +14,16 @@ class Env
 {
     use Resolvable;
 
+    /**
+     * Get the value of environment settings.
+     *
+     * Env::get('GITHUB_TOKEN')
+     *
+     * @param string $key
+     * @param mixed|null $default
+     *
+     * @return mixed
+     */
     public function get(string $key, mixed $default = null): mixed
     {
         return self::resolveCallback($key, fn (string $key) => $this->getValue($key, $default));

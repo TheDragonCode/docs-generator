@@ -23,7 +23,7 @@ class FileInfo
         return Path::filename($this->filename);
     }
 
-    public function header(): string
+    public function basename(): string
     {
         return Str::before($this->filename, '.php');
     }

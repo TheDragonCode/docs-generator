@@ -1,0 +1,29 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests;
+
+use DragonCode\DocsGenerator\Enum\Message;
+use DragonCode\DocsGenerator\Facades\Env;
+use DragonCode\DocsGenerator\Facades\GitHub;
+
+class GenerateTest extends TestCase
+{
+    public function testGenerate()
+    {
+        $this->assertDirectoryDoesNotExist($this->docs_path);
+
+        $bin = realpath(__DIR__ . '/../bin/docs');
+
+        exec('php ' . $bin . ' generate --docs-dir=' . $this->docs_path, $output);
+
+        $this->assertSame([
+            Message::PREPARE_GENERATE(),
+            Message::PROCESSING(Env::class),
+            Message::PROCESSING(GitHub::class),
+        ], $output);
+
+        $this->assertDirectoryExists($this->docs_path);
+    }
+}

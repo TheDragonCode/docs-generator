@@ -2,33 +2,37 @@
 
 namespace DragonCode\DocsGenerator\Processors;
 
-use DragonCode\DocsGenerator\Templates\Block;
-use DragonCode\DocsGenerator\Templates\Page;
+use DragonCode\DocsGenerator\Enum\Stubs;
 use DragonCode\Support\Concerns\Makeable;
 use DragonCode\Support\Facades\Helpers\Arr;
-use DragonCode\Support\Facades\Helpers\Str;
 use DragonCode\Support\Facades\Instances\Reflection;
-use JetBrains\PhpStorm\Pure;
+use DragonCode\Support\Facades\Tools\Stub;
+use phpDocumentor\Reflection\DocBlock;
 use phpDocumentor\Reflection\DocBlockFactory;
 use ReflectionMethod;
 
+/**
+ * @property \DragonCode\Support\Facades\Facade|\Illuminate\Support\Facades\Facade|string $class
+ */
 class Helper
 {
     use Makeable;
 
     protected DocBlockFactory $doc;
 
-    #[Pure]
     public function __construct(
-        protected string $path,
-        protected string $header
+        protected string $class
     ) {
         $this->doc = DocBlockFactory::createInstance();
     }
 
     public function get(): string
     {
-        return Page::make($this->header, Arr::of($this->methods())->implode(''));
+        $class = $this->class;
+
+        $content = Arr::of($this->methods())->implode('');
+
+        return $this->stub(Stubs::PAGE, compact('class', 'content'));
     }
 
     protected function methods(): array
@@ -46,22 +50,37 @@ class Helper
         return $methods;
     }
 
-    protected function method(ReflectionMethod $method): string
+    protected function method(ReflectionMethod $reflection): string
     {
-        $summary     = $this->getSummary($method);
-        $description = $this->getDescription($method);
+        $class   = $reflection->class;
+        $method  = $reflection->getName();
+        $summary = $this->getSummary($reflection);
+        $example = $this->getExample($reflection);
 
-        return Block::make($method->getName(), $summary . PHP_EOL . PHP_EOL . $description);
+        return $this->stub(Stubs::BLOCK, compact('class', 'method', 'summary', 'example'));
     }
 
     protected function getSummary(ReflectionMethod $method): string
     {
-        return $this->doc->create($method->getDocComment())->getSummary();
+        return (string) $this->docBlock($method)?->getSummary();
     }
 
-    protected function getDescription(ReflectionMethod $method): ?string
+    protected function getExample(ReflectionMethod $method): string
     {
-        return $this->doc->create($method->getDocComment())->getDescription()->getBodyTemplate();
+        if ($code = $this->docBlock($method)?->getDescription()?->getBodyTemplate()) {
+            return $this->stub(Stubs::EXAMPLE, compact('code'));
+        }
+
+        return '';
+    }
+
+    protected function docBlock(ReflectionMethod $method): ?DocBlock
+    {
+        if ($doc = $method->getDocComment()) {
+            return $this->doc->create($doc);
+        }
+
+        return null;
     }
 
     /**
@@ -69,13 +88,11 @@ class Helper
      */
     protected function getMethods(): array
     {
-        return Reflection::resolve($this->resolveClassname())->getMethods(ReflectionMethod::IS_PUBLIC);
+        return Reflection::resolve($this->class::getFacadeRoot())->getMethods(ReflectionMethod::IS_PUBLIC);
     }
 
-    protected function resolveClassname(): string
+    protected function stub(Stubs $stub, array $values): string
     {
-        return Str::of($this->header)
-            ->replace('/', '\\')
-            ->prepend('DragonCode\\Support\\');
+        return Stub::replace(__DIR__ . '/../../stubs/' . $stub->value, $values);
     }
 }
