@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace DragonCode\DocsGenerator\Services;
 
-use DragonCode\Support\Facades\Facade;
 use DragonCode\Support\Facades\Filesystem\File;
 use DragonCode\Support\Facades\Helpers\Arr;
 use DragonCode\Support\Facades\Helpers\Str;
-use DragonCode\Support\Facades\Instances\Instance;
+use DragonCode\Support\Facades\Instances\Reflection;
 
 class Package
 {
@@ -49,7 +48,13 @@ class Package
 
     protected function allowClass(string $class): bool
     {
-        return Instance::of($class, [Facade::class, '\Illuminate\Support\Facades\Facade']);
+        $reflect = Reflection::resolve($class);
+
+        return class_exists($class)
+               && ! $reflect->isAbstract()
+               && ! $reflect->isAnonymous()
+               && ! $reflect->isInterface()
+               && ! $reflect->isTrait();
     }
 
     protected function getNamespaces(): array

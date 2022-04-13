@@ -1,0 +1,5 @@
+```php
+use {{class}};
+
+return {{class_short}}::{{method}}();
+```

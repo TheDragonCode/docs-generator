@@ -8,7 +8,6 @@ use DragonCode\DocsGenerator\Processors\Helper;
 use DragonCode\DocsGenerator\Services\Package;
 use DragonCode\Support\Facades\Filesystem\Directory;
 use DragonCode\Support\Facades\Filesystem\File;
-use DragonCode\Support\Facades\Helpers\Str;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -53,7 +52,7 @@ class Generate extends Command
 
             $info = $this->info($file);
 
-            $path = $this->targetPath($info->dirname(), $info->filename());
+            $path = $this->targetPath($info->markdown());
 
             $content = $this->getContent($class);
 
@@ -83,14 +82,9 @@ class Generate extends Command
         return new Package($this->basePath());
     }
 
-    protected function targetPath(string $directory, string $filename): string
+    protected function targetPath(string $path): string
     {
-        return Str::of($this->docsPath())
-            ->end(DIRECTORY_SEPARATOR)
-            ->append(Str::lower($directory))
-            ->append(DIRECTORY_SEPARATOR)
-            ->append(Str::lower($filename))
-            ->append('.md');
+        return rtrim($this->docsPath(), '\\/') . DIRECTORY_SEPARATOR . $path;
     }
 
     protected function basePath(): string

@@ -1,0 +1,7 @@
+```php
+use {{class}};
+
+$instance = new {{class_short}}();
+
+return $instance->{{method}}();
+```

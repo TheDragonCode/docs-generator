@@ -6,11 +6,13 @@ namespace DragonCode\DocsGenerator\Enum;
 
 enum Stubs: string
 {
-    case BLOCK = 'block.stub';
+    case CLASS_STUB = 'class.stub';
 
-    case CODE = 'code.stub';
+    case CODE_DYNAMIC_STUB = 'code-dynamic.stub';
 
-    case EXAMPLE = 'example.stub';
+    case CODE_STATIC_STUB = 'code-static.stub';
 
-    case PAGE = 'page.stub';
+    case EXAMPLE_STUB = 'example.stub';
+
+    case METHOD_STUB = 'method.stub';
 }
