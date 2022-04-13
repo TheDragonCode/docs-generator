@@ -7,7 +7,7 @@ namespace Tests;
 use DragonCode\DocsGenerator\Enum\Message;
 use DragonCode\DocsGenerator\Facades\Env;
 use DragonCode\DocsGenerator\Facades\GitHub;
-use DragonCode\DocsGenerator\Processors\Helper;
+use DragonCode\DocsGenerator\Processors\ClassProcessor;
 use DragonCode\DocsGenerator\Services;
 
 class GenerateTest extends TestCase
@@ -24,7 +24,7 @@ class GenerateTest extends TestCase
             Message::PREPARE_GENERATE(),
             Message::PROCESSING(Env::class),
             Message::PROCESSING(GitHub::class),
-            Message::PROCESSING(Helper::class),
+            Message::PROCESSING(ClassProcessor::class),
             Message::PROCESSING(Services\GitHub::class),
             Message::PROCESSING(Services\Package::class),
         ], $output);

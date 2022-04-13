@@ -4,7 +4,7 @@ namespace DragonCode\DocsGenerator\Console;
 
 use DragonCode\DocsGenerator\Dto\FileInfo;
 use DragonCode\DocsGenerator\Enum\Message;
-use DragonCode\DocsGenerator\Processors\Helper;
+use DragonCode\DocsGenerator\Processors\ClassProcessor;
 use DragonCode\DocsGenerator\Services\Package;
 use DragonCode\Support\Facades\Filesystem\Directory;
 use DragonCode\Support\Facades\Filesystem\File;
@@ -35,7 +35,8 @@ class Generate extends Command
 
         $package = $this->package();
 
-        $this->generate($package);
+        $this->generateMain($package);
+        $this->generateClasses($package);
     }
 
     protected function prepare(): void
@@ -45,7 +46,16 @@ class Generate extends Command
         Directory::ensureDelete($this->docsPath());
     }
 
-    protected function generate(Package $package): void
+    protected function generateMain(Package $package): void
+    {
+        $this->output->writeln(Message::PROCESSING('main'));
+
+        foreach ($package->files() as $file => $class) {
+
+        }
+    }
+
+    protected function generateClasses(Package $package): void
     {
         foreach ($package->files() as $file => $class) {
             $this->output->writeln(Message::PROCESSING($class));
@@ -67,7 +77,7 @@ class Generate extends Command
 
     protected function getContent(string $class): string
     {
-        return Helper::make($class)->get();
+        return ClassProcessor::make($class)->get();
     }
 
     #[Pure]

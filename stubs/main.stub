@@ -1,0 +1,7 @@
+# {{title}}
+
+![{{vendor}}-{{package}}](https://preview.dragon-code.pro/{{vendor_slug}}/{{package_slug}}.svg)
+
+{{bash}}
+
+{{content}}

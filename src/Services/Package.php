@@ -21,32 +21,34 @@ class Package
 
     public function files(): array
     {
-        $files = [];
+        return self::resolveCallback('package-files', function () {
+            $files = [];
 
-        foreach ($this->getNamespaces() as $namespace => $directory) {
-            $names = File::names(
-                $this->getAppPath($directory),
-                static fn (string $file) => Str::endsWith($file, '.php'),
-                recursive: true
-            );
+            foreach ($this->getNamespaces() as $namespace => $directory) {
+                $names = File::names(
+                    $this->getAppPath($directory),
+                    static fn (string $file) => Str::endsWith($file, '.php'),
+                    recursive: true
+                );
 
-            $names = Arr::of($names)
-                ->unique()
-                ->flip()
-                ->map(
-                    static fn (string $class, string $file) => Str::of($file)
-                        ->before('.php')
-                        ->replace('/', '\\')
-                        ->prepend($namespace)
-                        ->toString()
-                )
-                ->filter(fn ($file) => $this->allow($file, $namespace))
-                ->toArray();
+                $names = Arr::of($names)
+                    ->unique()
+                    ->flip()
+                    ->map(
+                        static fn (string $class, string $file) => Str::of($file)
+                            ->before('.php')
+                            ->replace('/', '\\')
+                            ->prepend($namespace)
+                            ->toString()
+                    )
+                    ->filter(fn ($file) => $this->allow($file, $namespace))
+                    ->toArray();
 
-            $files = array_merge($files, $names);
-        }
+                $files = array_merge($files, $names);
+            }
 
-        return $files;
+            return $files;
+        });
     }
 
     public function previewBrand(): ?string
