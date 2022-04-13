@@ -22,14 +22,14 @@ abstract class Processor
 
     protected DocBlockFactory $doc;
 
+    abstract public function get(): string;
+
     public function __construct(
-        protected Package        $package,
+        protected Package $package,
         protected FileDTO|string $file
     ) {
         $this->doc = DocBlockFactory::createInstance();
     }
-
-    abstract public function get(): string;
 
     protected function stub(Stubs $stub, Template $template): string
     {

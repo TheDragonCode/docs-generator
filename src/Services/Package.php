@@ -16,7 +16,7 @@ class Package
 
     #[Pure]
     public function __construct(
-        protected string   $path,
+        protected string $path,
         protected Composer $composer = new Composer()
     ) {
     }
