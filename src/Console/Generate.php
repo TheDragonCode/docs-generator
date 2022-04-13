@@ -20,14 +20,13 @@ class Generate extends Command
 
     protected string $base_path = '.';
 
-    protected string $docs_path = './docs';
-
     protected function configure()
     {
         return parent::configure()->addOption(
             'docs-dir',
             mode       : InputOption::VALUE_OPTIONAL,
-            description: 'Specifies a different path for generating documentation'
+            description: 'Specifies a different path for generating documentation',
+            default    : './docs'
         );
     }
 
@@ -101,6 +100,6 @@ class Generate extends Command
 
     protected function docsPath(): string
     {
-        return $this->input->getOption('docs-dir') ?: $this->docs_path;
+        return $this->input->getOption('docs-dir');
     }
 }
