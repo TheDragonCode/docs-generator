@@ -26,7 +26,6 @@
         "dragon-code/support": "^6.0",
         "guzzlehttp/guzzle": "^7.4",
         "http-interop/http-factory-guzzle": "^1.2",
-        "illuminate/support": "^9.8",
         "knplabs/github-api": "^3.6",
         "phpdocumentor/reflection-docblock": "^5.3",
         "symfony/console": "^6.0",

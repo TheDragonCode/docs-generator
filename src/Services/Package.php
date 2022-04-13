@@ -9,7 +9,6 @@ use DragonCode\Support\Facades\Filesystem\File;
 use DragonCode\Support\Facades\Helpers\Arr;
 use DragonCode\Support\Facades\Helpers\Str;
 use DragonCode\Support\Facades\Instances\Instance;
-use Illuminate\Support\Facades\Facade as IlluminateFacade;
 
 class Package
 {
@@ -39,7 +38,7 @@ class Package
                         ->prepend($namespace)
                         ->toString()
                 )
-                ->filter(fn ($file) => $this->allowFile($file))
+                ->filter(fn ($file) => $this->allowClass($file))
                 ->toArray();
 
             $files = array_merge($files, $names);
@@ -48,9 +47,9 @@ class Package
         return $files;
     }
 
-    protected function allowFile(string $class): bool
+    protected function allowClass(string $class): bool
     {
-        return Instance::of($class, [Facade::class, IlluminateFacade::class]);
+        return Instance::of($class, [Facade::class, '\Illuminate\Support\Facades\Facade']);
     }
 
     protected function getNamespaces(): array
