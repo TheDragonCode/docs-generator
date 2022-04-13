@@ -7,6 +7,7 @@ use DragonCode\DocsGenerator\Enum\Stubs;
 use DragonCode\Support\Concerns\Makeable;
 use DragonCode\Support\Facades\Facade;
 use DragonCode\Support\Facades\Helpers\Arr;
+use DragonCode\Support\Facades\Helpers\Str;
 use DragonCode\Support\Facades\Instances\Instance;
 use DragonCode\Support\Facades\Instances\Reflection;
 use DragonCode\Support\Facades\Tools\Stub;
@@ -43,7 +44,11 @@ class Helper
         $methods = [];
 
         foreach ($this->getMethods() as $method) {
-            if ($method->isConstructor() || $method->isDestructor() || $method->isDeprecated() || $method->isAbstract()) {
+            if ($method->isConstructor() || $method->isDestructor() || $method->isDeprecated() || $method->isAbstract() || $method->isInternal()) {
+                continue;
+            }
+
+            if (Str::startsWith($method->getName(), '__')) {
                 continue;
             }
 

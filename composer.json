@@ -55,10 +55,18 @@
         "sort-packages": true
     },
     "extra": {
-        "dragon-docs": {
-            "preview": {
-                "brand": "php",
-                "vendor": "The Dragon Code"
+        "dragon-code": {
+            "docs-generator": {
+                "preview": {
+                    "brand": "php",
+                    "vendor": "The Dragon Code"
+                },
+                "except": [
+                    "Console\\",
+                    "Dto\\",
+                    "Enum\\",
+                    "Helpers\\"
+                ]
             }
         }
     }

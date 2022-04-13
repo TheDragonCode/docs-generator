@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DragonCode\DocsGenerator\Services;
 
+use DragonCode\Support\Concerns\Resolvable;
 use DragonCode\Support\Facades\Filesystem\File;
 use DragonCode\Support\Facades\Helpers\Arr;
 use DragonCode\Support\Facades\Helpers\Str;
@@ -11,6 +12,8 @@ use DragonCode\Support\Facades\Instances\Reflection;
 
 class Package
 {
+    use Resolvable;
+
     public function __construct(
         protected string $path
     ) {
@@ -37,13 +40,28 @@ class Package
                         ->prepend($namespace)
                         ->toString()
                 )
-                ->filter(fn ($file) => $this->allowClass($file))
+                ->filter(fn ($file) => $this->allow($file, $namespace))
                 ->toArray();
 
             $files = array_merge($files, $names);
         }
 
         return $files;
+    }
+
+    public function previewBrand(): ?string
+    {
+        return $this->composer('extra.dragon-code.docs-generator.preview.brand');
+    }
+
+    public function previewVendor(): string
+    {
+        return $this->composer('extra.dragon-code.docs-generator.preview.vendor');
+    }
+
+    protected function allow(string $class, string $namespace): bool
+    {
+        return $this->allowClass($class) && $this->doesntExcept($class, $namespace);
     }
 
     protected function allowClass(string $class): bool
@@ -57,15 +75,34 @@ class Package
                && ! $reflect->isTrait();
     }
 
+    protected function doesntExcept(string $class, string $namespace): bool
+    {
+        $name = Str::after($class, $namespace);
+
+        return ! Str::startsWith($name, $this->except());
+    }
+
     protected function getNamespaces(): array
     {
-        $composer = File::load($this->getAppPath('composer.json'));
+        return $this->composer('autoload.psr-4', []);
+    }
 
-        return Arr::get($composer, 'autoload.psr-4', []);
+    protected function except(): array
+    {
+        return $this->composer('extra.dragon-code.docs-generator.except', []);
     }
 
     protected function getAppPath(string $filename): string
     {
         return implode(DIRECTORY_SEPARATOR, [$this->path, $filename]);
+    }
+
+    protected function composer(string $key, mixed $default = null): mixed
+    {
+        return self::resolveCallback($key, function (string $key) use ($default) {
+            $composer = File::load($this->getAppPath('composer.json'));
+
+            return Arr::get($composer, $key, $default);
+        });
     }
 }
