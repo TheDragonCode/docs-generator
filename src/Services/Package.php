@@ -4,107 +4,86 @@ declare(strict_types=1);
 
 namespace DragonCode\DocsGenerator\Services;
 
+use DragonCode\DocsGenerator\Dto\Preview;
+use DragonCode\DocsGenerator\Facades\Services\Finder as FinderFacade;
+use DragonCode\DocsGenerator\Helpers\Composer;
 use DragonCode\Support\Concerns\Resolvable;
-use DragonCode\Support\Facades\Filesystem\File;
-use DragonCode\Support\Facades\Helpers\Arr;
-use DragonCode\Support\Facades\Helpers\Str;
-use DragonCode\Support\Facades\Instances\Reflection;
+use JetBrains\PhpStorm\Pure;
 
 class Package
 {
     use Resolvable;
 
+    #[Pure]
     public function __construct(
-        protected string $path
+        protected string   $path,
+        protected Composer $composer = new Composer()
     ) {
     }
 
+    /**
+     * @return \DragonCode\DocsGenerator\Models\File[]|array
+     */
     public function files(): array
     {
-        return self::resolveCallback('package-files', function () {
-            $files = [];
-
-            foreach ($this->getNamespaces() as $namespace => $directory) {
-                $names = File::names(
-                    $this->getAppPath($directory),
-                    static fn (string $file) => Str::endsWith($file, '.php'),
-                    recursive: true
-                );
-
-                $names = Arr::of($names)
-                    ->unique()
-                    ->flip()
-                    ->map(
-                        static fn (string $class, string $file) => Str::of($file)
-                            ->before('.php')
-                            ->replace('/', '\\')
-                            ->prepend($namespace)
-                            ->toString()
-                    )
-                    ->filter(fn ($file) => $this->allow($file, $namespace))
-                    ->toArray();
-
-                $files = array_merge($files, $names);
-            }
-
-            return $files;
-        });
+        return FinderFacade::files($this->path);
     }
 
-    public function previewBrand(): ?string
+    /**
+     * Gets the package description.
+     *
+     * Document generation assistant.
+     *
+     * @return string
+     */
+    public function description(): string
     {
-        return $this->composer('extra.dragon-code.docs-generator.preview.brand');
+        return $this->composer->description($this->path);
     }
 
-    public function previewVendor(): string
+    /**
+     * Gets the package full name from the composer.json file.
+     *
+     * dragon-code/docs-generator
+     *
+     * @return string
+     */
+    public function fullName(): string
     {
-        return $this->composer('extra.dragon-code.docs-generator.preview.vendor');
+        return $this->composer->fullName($this->path);
     }
 
-    protected function allow(string $class, string $namespace): bool
+    /**
+     * Gets the name of the vendor.
+     *
+     * The Dragon Code
+     *
+     * @return string
+     */
+    public function vendor(): string
     {
-        return $this->allowClass($class) && $this->doesntExcept($class, $namespace);
+        return $this->composer->vendor($this->path);
     }
 
-    protected function allowClass(string $class): bool
+    /**
+     * Gets the name of the application.
+     *
+     * Docs Generator
+     *
+     * @return string
+     */
+    public function package(): string
     {
-        $reflect = Reflection::resolve($class);
-
-        return class_exists($class)
-               && ! $reflect->isAbstract()
-               && ! $reflect->isAnonymous()
-               && ! $reflect->isInterface()
-               && ! $reflect->isTrait();
+        return $this->composer->package($this->path);
     }
 
-    protected function doesntExcept(string $class, string $namespace): bool
+    /**
+     * Returns an Preview instance.
+     *
+     * @return \DragonCode\DocsGenerator\Dto\Preview
+     */
+    public function preview(): Preview
     {
-        $name = Str::after($class, $namespace);
-
-        return ! Str::startsWith($name, $this->except());
-    }
-
-    protected function getNamespaces(): array
-    {
-        return $this->composer('autoload.psr-4', []);
-    }
-
-    protected function except(): array
-    {
-        return $this->composer('extra.dragon-code.docs-generator.except', []);
-    }
-
-    protected function getAppPath(string $filename): string
-    {
-        return implode(DIRECTORY_SEPARATOR, [$this->path, $filename]);
-    }
-
-    protected function composer(string $key, mixed $default = null): mixed
-    {
-        return self::resolveCallback($key, function (string $key) use ($default) {
-            $composer = File::load($this->getAppPath('composer.json'));
-
-            return Arr::get($composer, $key, $default);
-        });
+        return $this->composer->preview($this->path);
     }
 }

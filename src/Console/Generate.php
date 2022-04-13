@@ -2,9 +2,11 @@
 
 namespace DragonCode\DocsGenerator\Console;
 
-use DragonCode\DocsGenerator\Dto\FileInfo;
 use DragonCode\DocsGenerator\Enum\Message;
-use DragonCode\DocsGenerator\Processors\ClassProcessor;
+use DragonCode\DocsGenerator\Models\File as FileDTO;
+use DragonCode\DocsGenerator\Processors\IndexProcessor;
+use DragonCode\DocsGenerator\Processors\PageProcessor;
+use DragonCode\DocsGenerator\Processors\Processor;
 use DragonCode\DocsGenerator\Services\Package;
 use DragonCode\Support\Facades\Filesystem\Directory;
 use DragonCode\Support\Facades\Filesystem\File;
@@ -35,8 +37,8 @@ class Generate extends Command
 
         $package = $this->package();
 
-        $this->generateMain($package);
-        $this->generateClasses($package);
+        $this->main($package);
+        //$this->pages($package);
     }
 
     protected function prepare(): void
@@ -46,43 +48,32 @@ class Generate extends Command
         Directory::ensureDelete($this->docsPath());
     }
 
-    protected function generateMain(Package $package): void
+    protected function main(Package $package): void
     {
-        $this->output->writeln(Message::PROCESSING('main'));
+        $this->process(IndexProcessor::class, $package, 'index.md', Message::PROCESSING('main'));
+    }
 
-        foreach ($package->files() as $file => $class) {
+    protected function pages(Package $package): void
+    {
+        foreach ($package->files() as $file) {
+            $this->process(PageProcessor::class, $package, $file, Message::PROCESSING($file));
         }
     }
 
-    protected function generateClasses(Package $package): void
+    protected function process(string $processor, Package $package, FileDTO|string $file, string $message): void
     {
-        foreach ($package->files() as $file => $class) {
-            $this->output->writeln(Message::PROCESSING($class));
+        $this->output->writeln($message);
 
-            $info = $this->info($file);
+        $path = $this->targetPath($file);
 
-            $path = $this->targetPath($info->markdown());
+        $content = $this->getContent($processor, $package, $file);
 
-            $content = $this->getContent($class);
-
-            $this->store($path, $content);
-        }
+        $this->store($path, $content);
     }
 
-    protected function store(string $path, string $content): void
+    protected function getContent(Processor|string $processor, Package $package, FileDTO|string $file): string
     {
-        File::store($path, $content);
-    }
-
-    protected function getContent(string $class): string
-    {
-        return ClassProcessor::make($class)->get();
-    }
-
-    #[Pure]
-    protected function info(string $filename): FileInfo
-    {
-        return new FileInfo($this->docsPath(), $filename);
+        return $processor::make($package, $file)->get();
     }
 
     #[Pure]
@@ -91,9 +82,16 @@ class Generate extends Command
         return new Package($this->basePath());
     }
 
-    protected function targetPath(string $path): string
+    protected function targetPath(FileDTO|string $path): string
     {
+        $path = is_object($path) ? $path->getMarkdownFilename() : $path;
+
         return rtrim($this->docsPath(), '\\/') . DIRECTORY_SEPARATOR . $path;
+    }
+
+    protected function store(string $path, string $content): void
+    {
+        File::store($path, $content);
     }
 
     protected function basePath(): string

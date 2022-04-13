@@ -6,7 +6,7 @@ namespace DragonCode\DocsGenerator\Enum;
 
 enum Stubs: string
 {
-    case BASH_STUB = 'bash.stub';
+    case INSTALL_STUB = 'install.stub';
 
     case CLASS_STUB = 'class.stub';
 

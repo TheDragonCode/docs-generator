@@ -1,7 +1,11 @@
-# {{title}}
+# {{package}}
 
-![{{vendor}}-{{package}}](https://preview.dragon-code.pro/{{vendor_slug}}/{{package_slug}}.svg)
+![{{vendor}} {{package}}](https://preview.dragon-code.pro/{{vendor_slug}}/{{package_slug}}.svg)
+
+> {{summary}}
 
 {{bash}}
+
+## Classes
 
 {{content}}

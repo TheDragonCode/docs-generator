@@ -57,11 +57,10 @@
     "extra": {
         "dragon-code": {
             "docs-generator": {
-                "except": [
-                    "Console\\",
-                    "Dto\\",
-                    "Enum\\",
-                    "Helpers\\"
+                "ignore": [
+                    "DragonCode\\DocsGenerator\\Console",
+                    "DragonCode\\DocsGenerator\\Dto",
+                    "DragonCode\\DocsGenerator\\Enum"
                 ],
                 "preview": {
                     "brand": "php",

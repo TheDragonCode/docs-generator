@@ -2,19 +2,19 @@
 
 namespace DragonCode\DocsGenerator\Processors;
 
-use DragonCode\DocsGenerator\Dto\TemplateDto;
+use DragonCode\DocsGenerator\Dto\Template;
 use DragonCode\DocsGenerator\Enum\Stubs;
+use DragonCode\DocsGenerator\Models\File;
+use DragonCode\DocsGenerator\Models\File as FileDTO;
+use DragonCode\DocsGenerator\Services\Package;
 use DragonCode\Support\Concerns\Makeable;
 use DragonCode\Support\Facades\Facade;
-use DragonCode\Support\Facades\Helpers\Str;
 use DragonCode\Support\Facades\Instances\Instance;
-use DragonCode\Support\Facades\Instances\Reflection;
 use DragonCode\Support\Facades\Tools\Stub;
 use phpDocumentor\Reflection\DocBlockFactory;
-use ReflectionMethod;
 
 /**
- * @property \DragonCode\Support\Facades\Facade|\Illuminate\Support\Facades\Facade|string $class
+ * @method static Processor make(Package $package, File|string $file)
  */
 abstract class Processor
 {
@@ -22,52 +22,22 @@ abstract class Processor
 
     protected DocBlockFactory $doc;
 
-    abstract public function get(): string;
-
-    abstract protected function method(ReflectionMethod $reflection): string;
-
     public function __construct(
-        protected string $class
+        protected Package        $package,
+        protected FileDTO|string $file
     ) {
         $this->doc = DocBlockFactory::createInstance();
     }
 
-    protected function methods(): array
+    abstract public function get(): string;
+
+    protected function stub(Stubs $stub, Template $template): string
     {
-        $methods = [];
-
-        foreach ($this->getMethods() as $method) {
-            if ($method->isConstructor() || $method->isDestructor() || $method->isDeprecated() || $method->isAbstract() || $method->isInternal()) {
-                continue;
-            }
-
-            if (Str::startsWith($method->getName(), '__')) {
-                continue;
-            }
-
-            $methods[] = $this->method($method);
-        }
-
-        return $methods;
+        return Stub::replace(__DIR__ . '/../../stubs/' . $stub->value, $template->toArray());
     }
 
-    /**
-     * @return ReflectionMethod[]
-     */
-    protected function getMethods(): array
+    protected function isFacade(Facade|string $namespace): bool
     {
-        $root = $this->isFacade() ? $this->class::getFacadeRoot() : $this->class;
-
-        return Reflection::resolve($root)->getMethods(ReflectionMethod::IS_PUBLIC);
-    }
-
-    protected function stub(Stubs $stub, TemplateDto $dto): string
-    {
-        return Stub::replace(__DIR__ . '/../../stubs/' . $stub->value, $dto->toArray());
-    }
-
-    protected function isFacade(): bool
-    {
-        return Instance::of($this->class, [Facade::class, '\Illuminate\Support\Facades\Facade']);
+        return Instance::of($namespace, [Facade::class, '\Illuminate\Support\Facades\Facade']);
     }
 }
