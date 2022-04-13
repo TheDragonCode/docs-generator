@@ -22,12 +22,14 @@ enum Message: string
     case PROCESSING_CLASS = 'Processing %s...';
 
     case DOWNLOADING = 'Downloading %s...';
+
     #[Pure]
     public static function PROCESSING(string $class): string
     {
         return self::sprint(self::PROCESSING_CLASS, $class);
     }
 
+    #[Pure]
     public static function DOWNLOADING(string $name): string
     {
         return self::sprint(self::DOWNLOADING, $name);
