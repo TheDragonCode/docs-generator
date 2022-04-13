@@ -51,7 +51,6 @@ class Generate extends Command
         $this->output->writeln(Message::PROCESSING('main'));
 
         foreach ($package->files() as $file => $class) {
-
         }
     }
 

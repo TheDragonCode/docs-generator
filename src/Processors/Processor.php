@@ -22,15 +22,15 @@ abstract class Processor
 
     protected DocBlockFactory $doc;
 
+    abstract public function get(): string;
+
+    abstract protected function method(ReflectionMethod $reflection): string;
+
     public function __construct(
         protected string $class
     ) {
         $this->doc = DocBlockFactory::createInstance();
     }
-
-    abstract public function get(): string;
-
-    abstract protected function method(ReflectionMethod $reflection): string;
 
     protected function methods(): array
     {
