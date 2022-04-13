@@ -57,16 +57,16 @@
     "extra": {
         "dragon-code": {
             "docs-generator": {
-                "preview": {
-                    "brand": "php",
-                    "vendor": "The Dragon Code"
-                },
                 "except": [
                     "Console\\",
                     "Dto\\",
                     "Enum\\",
                     "Helpers\\"
-                ]
+                ],
+                "preview": {
+                    "brand": "php",
+                    "vendor": "The Dragon Code"
+                }
             }
         }
     }
