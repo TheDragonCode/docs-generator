@@ -11,6 +11,7 @@ use DragonCode\DocsGenerator\Processors\Processor;
 use DragonCode\DocsGenerator\Services\Package;
 use DragonCode\Support\Facades\Filesystem\Directory;
 use DragonCode\Support\Facades\Filesystem\File;
+use DragonCode\Support\Facades\Helpers\Boolean;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -34,6 +35,12 @@ class Generate extends Command
                 mode       : InputOption::VALUE_OPTIONAL,
                 description: 'Specifies a different path for generating documentation',
                 default    : './docs'
+            )
+            ->addOption(
+                Option::CLEANUP_DOCS(),
+                mode       : InputOption::VALUE_OPTIONAL,
+                description: 'Specifies whether to delete the documentation folder before generating',
+                default    : 'true'
             );
     }
 
@@ -49,6 +56,10 @@ class Generate extends Command
 
     protected function prepare(): void
     {
+        if (! $this->hasCleanupDocs()) {
+            return;
+        }
+
         $this->line(Message::PREPARE_GENERATE());
 
         Directory::ensureDelete($this->docsPath());
@@ -102,15 +113,22 @@ class Generate extends Command
 
     protected function basePath(): string
     {
-        return $this->getPath(Option::PATH);
+        return $this->getOptionValue(Option::PATH);
     }
 
     protected function docsPath(): string
     {
-        return $this->getPath(Option::DOCS_PATH, false);
+        return $this->getOptionValue(Option::DOCS_PATH, false);
     }
 
-    protected function getPath(Option $option, bool $use_real = true): string
+    protected function hasCleanupDocs(): bool
+    {
+        $value = $this->getOptionValue(Option::CLEANUP_DOCS, false);
+
+        return Boolean::parse($value) ?? true;
+    }
+
+    protected function getOptionValue(Option $option, bool $use_real = true): string|bool
     {
         $value = $this->input->getOption($option->value);
 

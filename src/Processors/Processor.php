@@ -25,7 +25,7 @@ abstract class Processor
     abstract public function get(): string;
 
     public function __construct(
-        protected Package $package,
+        protected Package        $package,
         protected FileDTO|string $file
     ) {
         $this->doc = DocBlockFactory::createInstance();

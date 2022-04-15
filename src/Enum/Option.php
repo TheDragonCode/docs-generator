@@ -7,6 +7,7 @@ use ArchTech\Enums\InvokableCases;
 /**
  * @method static string PATH()
  * @method static string DOCS_PATH()
+ * @method static string CLEANUP_DOCS()
  */
 enum Option: string
 {
@@ -15,4 +16,6 @@ enum Option: string
     case PATH = 'path';
 
     case DOCS_PATH = 'docs-path';
+
+    case CLEANUP_DOCS = 'cleanup-docs';
 }

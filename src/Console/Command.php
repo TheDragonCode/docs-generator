@@ -18,7 +18,9 @@ abstract class Command extends BaseCommand
 
     protected OutputInterface $output;
 
-    protected string $tmp_path = './temp';
+    protected string $tmp_path = './temp-source';
+
+    protected string $tmp_docs = './temp-docs';
 
     abstract protected function handle(): void;
 

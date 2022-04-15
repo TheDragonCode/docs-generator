@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use DragonCode\DocsGenerator\Facades\Helpers\Execute;
 use DragonCode\Support\Facades\Filesystem\Directory;
-use DragonCode\Support\Facades\Helpers\Arr;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
@@ -23,16 +23,6 @@ abstract class TestCase extends BaseTestCase
 
     protected function exec(string $command, array $options = []): array
     {
-        exec($command . ' ' . $this->compileOptions($options), $output);
-
-        return $output;
-    }
-
-    protected function compileOptions(array $options): string
-    {
-        return Arr::of($options)
-            ->map(static fn (string $value, string $key) => sprintf('--%s=%s', $key, $value))
-            ->implode(' ')
-            ->toString();
+        return Execute::call($command, $options);
     }
 }
