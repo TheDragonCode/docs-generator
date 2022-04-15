@@ -9,11 +9,11 @@ use DragonCode\DocsGenerator\Facades\GitHub;
 use DragonCode\Support\Facades\Filesystem\Directory;
 use DragonCode\Support\Facades\Helpers\Arr;
 
-class Compile extends Command
+class Download extends Command
 {
-    protected string $signature = 'compile';
+    protected string $signature = 'download';
 
-    protected string $description = 'Download repositories and compile documentation';
+    protected string $description = 'Download repositories';
 
     protected function configure()
     {
