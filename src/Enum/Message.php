@@ -25,7 +25,6 @@ enum Message: string
     case DOWNLOADING = 'Downloading %s...';
 
     case INSTALLING = 'Installing %s...';
-
     #[Pure]
     public static function PROCESSING(string $class): string
     {
