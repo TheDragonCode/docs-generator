@@ -73,7 +73,8 @@ class Download extends Command
         $this->info(Message::GENERATING($name));
 
         Execute::call('php ' . $path . '/vendor/bin/docs generate', [
-            Option::DOCS_PATH()    => $this->tmp_docs,
+            Option::PATH()         => $path,
+            Option::DOCS_PATH()    => $this->tmp_docs . '/' . $name,
             Option::CLEANUP_DOCS() => 'false',
         ]);
     }
