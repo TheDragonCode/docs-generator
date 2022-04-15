@@ -1,13 +1,15 @@
-# DragonCode\DocsGenerator\Facades\Env
+# DragonCode\DocsGenerator\Helpers\Env
 
 ### get
 
 Get the value of environment settings.
 
 ```php
-use DragonCode\DocsGenerator\Facades\Env;
+use DragonCode\DocsGenerator\Helpers\Env;
 
-return Env::get();
+$instance = new Env();
+
+return $instance->get();
 ```
 
 

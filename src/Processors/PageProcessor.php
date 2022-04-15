@@ -15,14 +15,14 @@ class PageProcessor extends Processor
 {
     public function get(): string
     {
-        $class = $this->value;
+        $class = $this->file->getShowNamespace();
 
-        $content = $this->getContent();
+        $content = $this->getContent($this->file->getNamespace());
 
         return $this->stub(Stubs::CLASS_STUB, new Template(compact('class', 'content')));
     }
 
-    protected function methods(Facade|string $namespace): array
+    protected function methods(string $namespace): array
     {
         $methods = [];
 
@@ -35,17 +35,17 @@ class PageProcessor extends Processor
                 continue;
             }
 
-            $methods[] = $this->method($method);
+            $methods[] = $this->method($method, $namespace);
         }
 
         return $methods;
     }
 
-    protected function method(ReflectionMethod $reflection): string
+    protected function method(ReflectionMethod $reflection, string $namespace): string
     {
         $method  = $reflection->getName();
         $summary = $this->getSummary($reflection);
-        $code    = $this->getCallCode($reflection);
+        $code    = $this->getCallCode($reflection, $namespace);
         $example = $this->getExample($reflection);
 
         return $this->stub(Stubs::METHOD_STUB, new Template(compact('method', 'summary', 'code', 'example')));
@@ -54,16 +54,21 @@ class PageProcessor extends Processor
     /**
      * @param Facade|string $namespace
      *
-     * @return ReflectionMethod[]
+     * @return array<ReflectionMethod>
      */
     protected function getMethods(Facade|string $namespace): array
     {
         $root = $this->isFacade($namespace) ? $namespace::getFacadeRoot() : $namespace;
 
-        return Reflection::resolve($root)->getMethods(ReflectionMethod::IS_PUBLIC);
+        $methods = Reflection::resolve($root)->getMethods(ReflectionMethod::IS_PUBLIC);
+
+        return Arr::of($methods)
+            ->renameKeys(static fn (int $key, ReflectionMethod $method) => $method->getName())
+            ->ksort()
+            ->toArray();
     }
 
-    protected function getContent(Facade|string $namespace): string
+    protected function getContent(string $namespace): string
     {
         return Arr::of($this->methods($namespace))->implode('');
     }
@@ -73,12 +78,11 @@ class PageProcessor extends Processor
         return (string) $this->docBlock($method)?->getSummary();
     }
 
-    protected function getCallCode(ReflectionMethod $reflection): string
+    protected function getCallCode(ReflectionMethod $reflection, string $class): string
     {
-        $class  = $this->value;
         $method = $reflection->getName();
 
-        $stub = $this->isFacade() || $reflection->isStatic() ? Stubs::CODE_STATIC_STUB : Stubs::CODE_DYNAMIC_STUB;
+        $stub = $this->isFacade($class) || $reflection->isStatic() ? Stubs::CODE_STATIC_STUB : Stubs::CODE_DYNAMIC_STUB;
 
         return $this->stub($stub, new Template(compact('class', 'method')));
     }

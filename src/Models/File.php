@@ -16,11 +16,37 @@ class File
     ) {
     }
 
+    /**
+     * Receive a namespace.
+     *
+     * \DragonCode\DocsGenerator\Models\File
+     *
+     * @return string
+     */
     public function getNamespace(): string
     {
         return Str::of($this->namespace)->start('\\')->toString();
     }
 
+    /**
+     * Receive display namespace.
+     *
+     * DragonCode\DocsGenerator\Models\File
+     *
+     * @return string
+     */
+    public function getShowNamespace(): string
+    {
+        return ltrim($this->getNamespace(), '\\');
+    }
+
+    /**
+     * Receive a generated path to markdown file.
+     *
+     * models/file.md
+     *
+     * @return string
+     */
     public function getMarkdownFilename(): string
     {
         return Str::of($this->getNamespace())

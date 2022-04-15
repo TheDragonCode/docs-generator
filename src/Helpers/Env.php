@@ -17,7 +17,8 @@ class Env
     /**
      * Get the value of environment settings.
      *
-     * Env::get('GITHUB_TOKEN')
+     * return Env::get('GITHUB_TOKEN')
+     * // 02d95b05-0515-4480-91bf-37a7c86e2274
      *
      * @param string $key
      * @param mixed|null $default

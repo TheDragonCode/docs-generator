@@ -60,7 +60,8 @@
                 "ignore": [
                     "DragonCode\\DocsGenerator\\Console",
                     "DragonCode\\DocsGenerator\\Dto",
-                    "DragonCode\\DocsGenerator\\Enum"
+                    "DragonCode\\DocsGenerator\\Enum",
+                    "DragonCode\\DocsGenerator\\Processors"
                 ],
                 "preview": {
                     "brand": "php",

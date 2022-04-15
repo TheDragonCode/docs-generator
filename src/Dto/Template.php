@@ -45,7 +45,7 @@ class Template extends DataTransferObject
     {
         $this->class_short = Arr::last(explode('\\', $value));
 
-        return $value;
+        return ltrim($value, '\\');
     }
 
     protected function castVendor(string $value): string

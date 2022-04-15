@@ -25,7 +25,7 @@ class IndexProcessor extends Processor
         $result = [];
 
         foreach ($this->package->files() as $file) {
-            $title = ltrim($file->getNamespace(), '\\');
+            $title = $file->getShowNamespace();
 
             $link = $file->getMarkdownFilename();
 

@@ -109,6 +109,33 @@ class Composer
         return Str::of($this->config($directory, 'name'))->after('/')->slug(' ')->title()->toString();
     }
 
+    /**
+     * Gets an object to build a preview.
+     *
+     * $preview = Preview::make(...);
+     *
+     * $preview->brand;
+     * // php, laravel, symfony, etc
+     * // See more at https://dragon-code.pro
+     *
+     * $preview->vendor;
+     * // If the `extra.dragon-code.docs-generator.preview.brand` key is defined,
+     * // then its value, otherwise the value up to the symbol `/` vendor key will be taken.
+     * //
+     * // For example,
+     * //   the dragon code
+     * //   dragon-code
+     *
+     * $preview->name;
+     * // Everything after the slash in the name key.
+     * //
+     * // For example,
+     * //   docs-generator
+     *
+     * @param string $directory
+     *
+     * @return \DragonCode\DocsGenerator\Dto\Preview
+     */
     public function preview(string $directory): Preview
     {
         $brand  = $this->config($directory, 'extra.dragon-code.docs-generator.preview.brand');
