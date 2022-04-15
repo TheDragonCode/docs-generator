@@ -38,7 +38,7 @@ class Generate extends Command
         $package = $this->package();
 
         $this->main($package);
-        //$this->pages($package);
+        $this->pages($package);
     }
 
     protected function prepare(): void
@@ -56,7 +56,7 @@ class Generate extends Command
     protected function pages(Package $package): void
     {
         foreach ($package->files() as $file) {
-            $this->process(PageProcessor::class, $package, $file, Message::PROCESSING($file));
+            $this->process(PageProcessor::class, $package, $file, Message::PROCESSING($file->getNamespace()));
         }
     }
 

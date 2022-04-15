@@ -28,7 +28,7 @@ class File
             ->after($this->prefix)
             ->explode('\\')
             ->map(static fn (string $value) => Str::of($value)->snake()->slug())
-            ->implode(DIRECTORY_SEPARATOR)
+            ->implode('/')
             ->append($this->extension)
             ->toString();
     }
