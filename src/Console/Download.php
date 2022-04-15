@@ -55,7 +55,9 @@ class Download extends Command
     {
         $this->info(Message::INSTALLING($name));
 
-        Execute::call('composer update', [
+        $package = $this->package()->fullName();
+
+        Execute::call('composer require ' . $package.':dev-main', [
             'working-dir'    => $path,
             'no-interaction' => null,
             'no-progress'    => null,

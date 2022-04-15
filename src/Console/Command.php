@@ -6,8 +6,10 @@ namespace DragonCode\DocsGenerator\Console;
 
 use DragonCode\DocsGenerator\Enum\Message;
 use DragonCode\DocsGenerator\Enum\Option;
+use DragonCode\DocsGenerator\Services\Package;
 use DragonCode\Support\Facades\Filesystem\Directory;
 use DragonCode\Support\Facades\Helpers\Boolean;
+use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Console\Command\Command as BaseCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -54,6 +56,12 @@ abstract class Command extends BaseCommand
         $this->handle();
 
         return 0;
+    }
+
+    #[Pure]
+    protected function package(): Package
+    {
+        return new Package($this->basePath());
     }
 
     protected function line(string $value, ?string $style = null): void

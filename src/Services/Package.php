@@ -16,13 +16,13 @@ class Package
 
     #[Pure]
     public function __construct(
-        protected string $path,
+        protected string   $path,
         protected Composer $composer = new Composer()
     ) {
     }
 
     /**
-     * @return \DragonCode\DocsGenerator\Models\File[]|array
+     * @return array<\DragonCode\DocsGenerator\Models\File>
      */
     public function files(): array
     {

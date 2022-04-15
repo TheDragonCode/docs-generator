@@ -77,6 +77,7 @@ class Finder
 
     protected function allowClassType(string $class): bool
     {
+        dump('  ' . (int) class_exists($class) . ' : ' . $class);
         if (! class_exists($class)) {
             return false;
         }

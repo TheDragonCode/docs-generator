@@ -10,7 +10,6 @@ use DragonCode\DocsGenerator\Processors\PageProcessor;
 use DragonCode\DocsGenerator\Processors\Processor;
 use DragonCode\DocsGenerator\Services\Package;
 use DragonCode\Support\Facades\Filesystem\File;
-use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Console\Input\InputOption;
 
 class Generate extends Command
@@ -79,12 +78,6 @@ class Generate extends Command
     protected function getContent(Processor|string $processor, Package $package, FileDTO|string $file): string
     {
         return $processor::make($package, $file)->get();
-    }
-
-    #[Pure]
-    protected function package(): Package
-    {
-        return new Package($this->basePath());
     }
 
     protected function targetPath(FileDTO|string $path): string
