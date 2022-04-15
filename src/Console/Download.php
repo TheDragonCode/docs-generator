@@ -37,7 +37,7 @@ class Download extends Command
             $url  = Arr::get($repository, 'ssh_url');
             $name = Arr::get($repository, 'name');
 
-            $this->output->writeln(Message::DOWNLOADING($name));
+            $this->line(Message::DOWNLOADING($name));
 
             $this->download($url, $name);
         }
@@ -54,13 +54,19 @@ class Download extends Command
 
     protected function getRepositories(): array
     {
-        $this->output->writeln(Message::RECEIVING_REPOSITORIES());
+        $this->line(Message::RECEIVING_REPOSITORIES());
 
         return GitHub::repositories($this->getOrganization());
     }
 
     protected function getOrganization(): string
     {
-        return $this->input->getArgument('organization');
+        if ($name = $this->input->getArgument('organization')) {
+            return $name;
+        }
+
+        $this->error('<error>You did not enter an organization name</error>');
+
+        exit(1);
     }
 }

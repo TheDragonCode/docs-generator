@@ -38,4 +38,16 @@ abstract class Command extends BaseCommand
 
         return 0;
     }
+
+    protected function line(string $value, ?string $style = null): void
+    {
+        $this->output->isDecorated() && ! empty($style)
+            ? $this->output->writeln("<$style>$value</$style>")
+            : $this->output->writeln($value);
+    }
+
+    protected function error(string $value): void
+    {
+        $this->line($value, 'error');
+    }
 }

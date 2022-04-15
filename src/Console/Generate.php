@@ -43,7 +43,7 @@ class Generate extends Command
 
     protected function prepare(): void
     {
-        $this->output->writeln(Message::PREPARE_GENERATE());
+        $this->line(Message::PREPARE_GENERATE());
 
         Directory::ensureDelete($this->docsPath());
     }
@@ -62,7 +62,7 @@ class Generate extends Command
 
     protected function process(string $processor, Package $package, FileDTO|string $file, string $message): void
     {
-        $this->output->writeln($message);
+        $this->line($message);
 
         $path = $this->targetPath($file);
 
