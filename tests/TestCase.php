@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use DragonCode\Support\Facades\Application\OS;
 use DragonCode\Support\Facades\Filesystem\Directory;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
@@ -21,9 +20,7 @@ abstract class TestCase extends BaseTestCase
 
     protected function exec(string $command): array
     {
-        $sudo = OS::isUnix() ? 'sudo' : '';
-
-        exec($sudo . ' ' . $command, $output);
+        exec($command, $output);
 
         return $output;
     }

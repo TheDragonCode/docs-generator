@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Tests;
 
 use DragonCode\DocsGenerator\Enum\Message;
-use DragonCode\DocsGenerator\Facades\Env;
-use DragonCode\DocsGenerator\Facades\GitHub;
-use DragonCode\DocsGenerator\Processors\PageProcessor;
+use DragonCode\DocsGenerator\Facades;
+use DragonCode\DocsGenerator\Helpers;
+use DragonCode\DocsGenerator\Models;
 use DragonCode\DocsGenerator\Services;
 
 class GenerateTest extends TestCase
@@ -22,9 +22,14 @@ class GenerateTest extends TestCase
 
         $this->assertSame([
             Message::PREPARE_GENERATE(),
-            Message::PROCESSING(Env::class),
-            Message::PROCESSING(GitHub::class),
-            Message::PROCESSING(PageProcessor::class),
+            Message::PROCESSING('main'),
+            Message::PROCESSING(Facades\Env::class),
+            Message::PROCESSING(Facades\GitHub::class),
+            Message::PROCESSING(Facades\Services\Finder::class),
+            Message::PROCESSING(Helpers\Composer::class),
+            Message::PROCESSING(Helpers\Env::class),
+            Message::PROCESSING(Models\File::class),
+            Message::PROCESSING(Services\Finder::class),
             Message::PROCESSING(Services\GitHub::class),
             Message::PROCESSING(Services\Package::class),
         ], $output);
