@@ -57,7 +57,7 @@ class Download extends Command
 
         $package = $this->package()->fullName();
 
-        Execute::call('composer require ' . $package.':dev-main', [
+        Execute::call('composer require ' . $package . ':dev-main', [
             'working-dir'    => $path,
             'no-interaction' => null,
             'no-progress'    => null,
