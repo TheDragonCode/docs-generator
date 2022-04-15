@@ -6,6 +6,14 @@ use DragonCode\Support\Facades\Helpers\Arr;
 
 class Execute
 {
+    /**
+     * Execute an external program.
+     *
+     * @param string $command
+     * @param array $options
+     *
+     * @return array
+     */
     public function call(string $command, array $options = []): array
     {
         exec($command . ' ' . $this->compileOptions($options), $output);
