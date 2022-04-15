@@ -22,7 +22,6 @@ enum Message: string
     case PROCESSING_CLASS = 'Processing %s...';
 
     case DOWNLOADING = 'Downloading %s...';
-
     #[Pure]
     public static function PROCESSING(string $class): string
     {
