@@ -58,7 +58,6 @@ class Generate extends Command
 
     protected function pages(Package $package): void
     {
-        dd($package->files());
         foreach ($package->files() as $file) {
             $this->process(PageProcessor::class, $package, $file, Message::PROCESSING($file->getShowNamespace()));
         }

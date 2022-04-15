@@ -25,6 +25,9 @@ enum Message: string
     case DOWNLOADING = 'Downloading %s...';
 
     case INSTALLING = 'Installing %s...';
+
+    case GENERATING = 'Generating %s...';
+
     #[Pure]
     public static function PROCESSING(string $class): string
     {
@@ -41,6 +44,12 @@ enum Message: string
     public static function INSTALLING(string $name): string
     {
         return self::sprint(self::INSTALLING, $name);
+    }
+
+    #[Pure]
+    public static function GENERATING(string $name): string
+    {
+        return self::sprint(self::GENERATING, $name);
     }
 
     protected static function sprint(Message $message, string $value): string

@@ -93,7 +93,12 @@ abstract class Command extends BaseCommand
 
     protected function basePath(): string
     {
-        return $this->getOptionValue(Option::PATH);
+        return $this->hasBasePath() ? $this->getOptionValue(Option::PATH) : '.';
+    }
+
+    protected function hasBasePath(): bool
+    {
+        return $this->input->hasOption(Option::PATH());
     }
 
     protected function docsPath(): string

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DragonCode\DocsGenerator\Console;
 
 use DragonCode\DocsGenerator\Enum\Message;
+use DragonCode\DocsGenerator\Enum\Option;
 use DragonCode\DocsGenerator\Facades\GitHub;
 use DragonCode\DocsGenerator\Facades\Helpers\Execute;
 use DragonCode\Support\Facades\Filesystem\Directory;
@@ -14,7 +15,7 @@ class Download extends Command
 {
     protected string $signature = 'download';
 
-    protected string $description = 'Download repositories';
+    protected string $description = 'Download repositories and generate docs';
 
     protected function configure()
     {
@@ -39,6 +40,7 @@ class Download extends Command
 
             $this->download($name, $url, $path);
             $this->install($name, $path);
+            $this->generate($name, $path);
         }
     }
 
@@ -57,13 +59,22 @@ class Download extends Command
 
         $package = $this->package()->fullName();
 
-        Execute::call('composer require ' . $package.':dev-main', [
+        Execute::call('composer require ' . $package . ':dev-main', [
             'working-dir'    => $path,
             'no-interaction' => null,
             'no-progress'    => null,
             'no-plugins'     => null,
-            'prefer-stable'  => null,
             'quiet'          => null,
+        ]);
+    }
+
+    protected function generate(string $name, string $path): void
+    {
+        $this->info(Message::GENERATING($name));
+
+        Execute::call('php ' . $path . '/vendor/bin/docs generate', [
+            Option::DOCS_PATH()    => $this->tmp_docs,
+            Option::CLEANUP_DOCS() => 'false',
         ]);
     }
 
