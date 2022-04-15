@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace DragonCode\DocsGenerator\Console;
 
 use DragonCode\DocsGenerator\Enum\Message;
-use DragonCode\DocsGenerator\Enum\Option;
 use DragonCode\DocsGenerator\Facades\GitHub;
 use DragonCode\DocsGenerator\Facades\Helpers\Execute;
 use DragonCode\Support\Facades\Filesystem\Directory;
@@ -24,13 +23,8 @@ class Download extends Command
 
     protected function handle(): void
     {
-        $this->prepare();
+        $this->prepare($this->tmp_path);
         $this->process();
-    }
-
-    protected function prepare(): void
-    {
-        Directory::ensureDelete($this->tmp_path);
     }
 
     protected function process(): void
@@ -39,31 +33,36 @@ class Download extends Command
             $url  = Arr::get($repository, 'ssh_url');
             $name = Arr::get($repository, 'name');
 
-            $this->line(Message::DOWNLOADING($name));
+            $this->line(Message::PROCESSING($name));
 
             $path = $this->getSourcePath($name);
 
-            $this->download($url, $path);
-            $this->generate($path, $name);
+            $this->download($name, $url, $path);
+            $this->install($name, $path);
         }
     }
 
-    protected function generate(string $path, string $name): void
+    protected function download(string $name, string $url, string $path): void
     {
-        $bin = __DIR__ . '/../../bin/docs';
+        $this->info(Message::DOWNLOADING($name));
 
-        Execute::call('php ' . $bin . ' generate', [
-            Option::PATH()         => $path,
-            Option::DOCS_PATH()    => $this->tmp_docs . '/' . $name,
-            Option::CLEANUP_DOCS() => false,
-        ]);
-    }
-
-    protected function download(string $url, string $path): void
-    {
         Directory::ensureDirectory($path, can_delete: true);
 
         GitHub::download($url, $path);
+    }
+
+    protected function install(string $name, string $path): void
+    {
+        $this->info(Message::INSTALLING($name));
+
+        Execute::call('composer update', [
+            'working-dir'    => $path,
+            'no-interaction' => null,
+            'no-progress'    => null,
+            'no-plugins'     => null,
+            'prefer-stable'  => null,
+            'quiet'          => null,
+        ]);
     }
 
     protected function getRepositories(): array
@@ -82,10 +81,5 @@ class Download extends Command
         $this->error('<error>You did not enter an organization name</error>');
 
         exit(1);
-    }
-
-    protected function getSourcePath(string $name): string
-    {
-        return $this->tmp_path . '/' . $name;
     }
 }

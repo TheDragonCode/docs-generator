@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DragonCode\DocsGenerator\Services;
 
+use DragonCode\DocsGenerator\Facades\Helpers\Execute;
 use DragonCode\Support\Facades\Helpers\Arr;
 use DragonCode\Support\Facades\Helpers\Str;
 use DragonCode\Support\Facades\Http\Url;
@@ -60,12 +61,14 @@ class GitHub
      */
     public function download(string $ssh_url, string $directory): void
     {
-        exec('git clone ' . $ssh_url . ' ' . $directory);
+        Execute::call('git clone ' . $ssh_url . ' ' . $directory);
     }
 
     protected function allow(array $organization): bool
     {
         return $this->doesntPrivate($organization)
+               && $this->doesntArchive($organization)
+               && $this->doesntDisabled($organization)
                && $this->doesntDot($organization)
                && $this->doesntHasNoDoc($organization);
     }
@@ -79,7 +82,22 @@ class GitHub
 
     protected function doesntPrivate(array $organization): bool
     {
-        return ! Arr::get($organization, 'private');
+        return $this->doesnt($organization, 'private');
+    }
+
+    protected function doesntArchive(array $organization): bool
+    {
+        return $this->doesnt($organization, 'archived');
+    }
+
+    protected function doesntDisabled(array $organization): bool
+    {
+        return $this->doesnt($organization, 'disabled');
+    }
+
+    protected function doesnt(array $organization, string $key): bool
+    {
+        return ! Arr::get($organization, $key);
     }
 
     protected function doesntHasNoDoc(array $organization): bool

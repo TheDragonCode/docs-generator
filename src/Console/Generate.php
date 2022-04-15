@@ -9,9 +9,7 @@ use DragonCode\DocsGenerator\Processors\IndexProcessor;
 use DragonCode\DocsGenerator\Processors\PageProcessor;
 use DragonCode\DocsGenerator\Processors\Processor;
 use DragonCode\DocsGenerator\Services\Package;
-use DragonCode\Support\Facades\Filesystem\Directory;
 use DragonCode\Support\Facades\Filesystem\File;
-use DragonCode\Support\Facades\Helpers\Boolean;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -46,23 +44,12 @@ class Generate extends Command
 
     protected function handle(): void
     {
-        $this->prepare();
+        $this->prepare($this->docsPath());
 
         $package = $this->package();
 
         $this->main($package);
         $this->pages($package);
-    }
-
-    protected function prepare(): void
-    {
-        if (! $this->hasCleanupDocs()) {
-            return;
-        }
-
-        $this->line(Message::PREPARE_GENERATE());
-
-        Directory::ensureDelete($this->docsPath());
     }
 
     protected function main(Package $package): void
@@ -72,6 +59,7 @@ class Generate extends Command
 
     protected function pages(Package $package): void
     {
+        dd($package->files());
         foreach ($package->files() as $file) {
             $this->process(PageProcessor::class, $package, $file, Message::PROCESSING($file->getShowNamespace()));
         }
@@ -109,29 +97,5 @@ class Generate extends Command
     protected function store(string $path, string $content): void
     {
         File::store($path, $content);
-    }
-
-    protected function basePath(): string
-    {
-        return $this->getOptionValue(Option::PATH);
-    }
-
-    protected function docsPath(): string
-    {
-        return $this->getOptionValue(Option::DOCS_PATH, false);
-    }
-
-    protected function hasCleanupDocs(): bool
-    {
-        $value = $this->getOptionValue(Option::CLEANUP_DOCS, false);
-
-        return Boolean::parse($value) ?? true;
-    }
-
-    protected function getOptionValue(Option $option, bool $use_real = true): string|bool
-    {
-        $value = $this->input->getOption($option->value);
-
-        return $use_real ? realpath($value) : $value;
     }
 }

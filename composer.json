@@ -40,7 +40,10 @@
     "autoload": {
         "psr-4": {
             "DragonCode\\DocsGenerator\\": "src"
-        }
+        },
+        "classmap": [
+            "temp"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

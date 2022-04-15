@@ -24,8 +24,13 @@ class Execute
     protected function compileOptions(array $options): string
     {
         return Arr::of($options)
-            ->map(static fn (string $value, string $key) => sprintf('--%s=%s', $key, $value))
+            ->map(fn (?string $value, string $key) => $this->compileOption($key, $value))
             ->implode(' ')
             ->toString();
+    }
+
+    protected function compileOption(string $key, ?string $value): string
+    {
+        return is_null($value) ? '--' . $key : sprintf('--%s=%s', $key, $value);
     }
 }

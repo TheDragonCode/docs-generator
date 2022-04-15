@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace DragonCode\DocsGenerator\Console;
 
+use DragonCode\DocsGenerator\Enum\Message;
+use DragonCode\DocsGenerator\Enum\Option;
+use DragonCode\Support\Facades\Filesystem\Directory;
+use DragonCode\Support\Facades\Helpers\Boolean;
 use Symfony\Component\Console\Command\Command as BaseCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -18,9 +22,9 @@ abstract class Command extends BaseCommand
 
     protected OutputInterface $output;
 
-    protected string $tmp_path = './temp-source';
+    protected string $tmp_path = './temp/source';
 
-    protected string $tmp_docs = './temp-docs';
+    protected string $tmp_docs = './temp/docs';
 
     abstract protected function handle(): void;
 
@@ -29,6 +33,17 @@ abstract class Command extends BaseCommand
         return $this
             ->setName($this->signature)
             ->setDescription($this->description);
+    }
+
+    protected function prepare(string $path): void
+    {
+        if ($this->hasCleanupDocsOption() && ! $this->hasCleanupDocs()) {
+            return;
+        }
+
+        $this->line(Message::CLEANUP());
+
+        Directory::ensureDelete($path);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -48,8 +63,52 @@ abstract class Command extends BaseCommand
             : $this->output->writeln($value);
     }
 
+    protected function info(string $value): void
+    {
+        $this->line($value, 'info');
+    }
+
     protected function error(string $value): void
     {
         $this->line($value, 'error');
+    }
+
+    protected function getSourcePath(string $name): string
+    {
+        return $this->tmp_path . '/' . $name;
+    }
+
+    protected function getDocsPath(string $name): string
+    {
+        return $this->tmp_docs . '/' . $name;
+    }
+
+    protected function basePath(): string
+    {
+        return $this->getOptionValue(Option::PATH);
+    }
+
+    protected function docsPath(): string
+    {
+        return $this->getOptionValue(Option::DOCS_PATH, false);
+    }
+
+    protected function hasCleanupDocs(): bool
+    {
+        $value = $this->getOptionValue(Option::CLEANUP_DOCS, false);
+
+        return Boolean::parse($value) ?? true;
+    }
+
+    protected function getOptionValue(Option $option, bool $use_real = true): string|bool
+    {
+        $value = $this->input->getOption($option->value);
+
+        return $use_real ? realpath($value) : $value;
+    }
+
+    protected function hasCleanupDocsOption(): bool
+    {
+        return $this->input->hasOption(Option::CLEANUP_DOCS());
     }
 }

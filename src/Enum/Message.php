@@ -8,6 +8,7 @@ use ArchTech\Enums\InvokableCases;
 use JetBrains\PhpStorm\Pure;
 
 /**
+ * @method static string CLEANUP()
  * @method static string PREPARE_GENERATE()
  * @method static string RECEIVING_REPOSITORIES()
  */
@@ -15,13 +16,16 @@ enum Message: string
 {
     use InvokableCases;
 
-    case PREPARE_GENERATE = 'Prepare docs generating...';
+    case CLEANUP = 'Pre-cleaning...';
 
     case RECEIVING_REPOSITORIES = 'Receiving repositories list...';
 
     case PROCESSING_CLASS = 'Processing %s...';
 
     case DOWNLOADING = 'Downloading %s...';
+
+    case INSTALLING = 'Installing %s...';
+
     #[Pure]
     public static function PROCESSING(string $class): string
     {
@@ -32,6 +36,12 @@ enum Message: string
     public static function DOWNLOADING(string $name): string
     {
         return self::sprint(self::DOWNLOADING, $name);
+    }
+
+    #[Pure]
+    public static function INSTALLING(string $name): string
+    {
+        return self::sprint(self::INSTALLING, $name);
     }
 
     protected static function sprint(Message $message, string $value): string

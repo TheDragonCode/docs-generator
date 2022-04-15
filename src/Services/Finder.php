@@ -46,7 +46,9 @@ class Finder
             foreach ($this->getNamespaces($path) as $namespace => $directory) {
                 $names = $this->find(rtrim($path, '\\/') . '/' . ltrim($directory, '\\/'), $namespace);
 
+                dump(count($names->toArray()));
                 $files = array_merge($files, $this->filter($names, $path));
+                dd(count($files));
             }
 
             return $files;
