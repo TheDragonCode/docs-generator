@@ -3,6 +3,7 @@
 namespace DragonCode\DocsGenerator\Console;
 
 use DragonCode\DocsGenerator\Enum\Message;
+use DragonCode\DocsGenerator\Enum\Option;
 use DragonCode\DocsGenerator\Models\File as FileDTO;
 use DragonCode\DocsGenerator\Processors\IndexProcessor;
 use DragonCode\DocsGenerator\Processors\PageProcessor;
@@ -19,16 +20,21 @@ class Generate extends Command
 
     protected string $description = 'Document generation';
 
-    protected string $base_path = '.';
-
     protected function configure()
     {
-        return parent::configure()->addOption(
-            'docs-dir',
-            mode       : InputOption::VALUE_OPTIONAL,
-            description: 'Specifies a different path for generating documentation',
-            default    : './docs'
-        );
+        return parent::configure()
+            ->addOption(
+                Option::PATH(),
+                mode       : InputOption::VALUE_OPTIONAL,
+                description: 'Specifies a different path for search code',
+                default    : '.'
+            )
+            ->addOption(
+                Option::DOCS_PATH(),
+                mode       : InputOption::VALUE_OPTIONAL,
+                description: 'Specifies a different path for generating documentation',
+                default    : './docs'
+            );
     }
 
     protected function handle(): void
@@ -96,11 +102,18 @@ class Generate extends Command
 
     protected function basePath(): string
     {
-        return realpath($this->base_path);
+        return $this->getPath(Option::PATH);
     }
 
     protected function docsPath(): string
     {
-        return $this->input->getOption('docs-dir');
+        return $this->getPath(Option::DOCS_PATH, false);
+    }
+
+    protected function getPath(Option $option, bool $use_real = true): string
+    {
+        $value = $this->input->getOption($option->value);
+
+        return $use_real ? realpath($value) : $value;
     }
 }

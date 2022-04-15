@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use DragonCode\DocsGenerator\Enum\Message;
+use DragonCode\DocsGenerator\Enum\Option;
 use DragonCode\DocsGenerator\Facades;
 use DragonCode\DocsGenerator\Helpers;
 use DragonCode\DocsGenerator\Models;
@@ -18,7 +19,10 @@ class GenerateTest extends TestCase
 
         $bin = realpath(__DIR__ . '/../bin/docs');
 
-        $output = $this->exec('php ' . $bin . ' generate --docs-dir=' . $this->docs_path);
+        $output = $this->exec('php ' . $bin . ' generate', [
+            Option::PATH()      => $this->path,
+            Option::DOCS_PATH() => $this->docs_path,
+        ]);
 
         $this->assertSame([
             Message::PREPARE_GENERATE(),
