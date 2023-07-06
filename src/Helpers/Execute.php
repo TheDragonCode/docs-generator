@@ -8,11 +8,6 @@ class Execute
 {
     /**
      * Execute an external program.
-     *
-     * @param string $command
-     * @param array $options
-     *
-     * @return array
      */
     public function call(string $command, array $options = []): array
     {

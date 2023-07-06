@@ -22,8 +22,7 @@ class Finder
     #[Pure]
     public function __construct(
         protected Composer $composer = new Composer()
-    ) {
-    }
+    ) {}
 
     /**
      * Returns a list of files found in the project for generating documentation.
@@ -34,9 +33,7 @@ class Finder
      *     new Instance(),
      * ]
      *
-     * @param string $path
-     *
-     * @return FileModel[]|array
+     * @return array<FileModel>|array
      */
     public function files(string $path): array
     {

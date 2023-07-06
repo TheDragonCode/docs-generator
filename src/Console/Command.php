@@ -113,7 +113,7 @@ abstract class Command extends BaseCommand
         return Boolean::parse($value) ?? true;
     }
 
-    protected function getOptionValue(Option $option, bool $use_real = true): string|bool
+    protected function getOptionValue(Option $option, bool $use_real = true): bool|string
     {
         $value = $this->input->getOption($option->value);
 

@@ -18,8 +18,7 @@ class Package
     public function __construct(
         protected string $path,
         protected Composer $composer = new Composer()
-    ) {
-    }
+    ) {}
 
     /**
      * @return array<\DragonCode\DocsGenerator\Models\File>
@@ -33,8 +32,6 @@ class Package
      * Gets the package description.
      *
      * Document generation assistant.
-     *
-     * @return string
      */
     public function description(): string
     {
@@ -45,8 +42,6 @@ class Package
      * Gets the package full name from the composer.json file.
      *
      * dragon-code/docs-generator
-     *
-     * @return string
      */
     public function fullName(): string
     {
@@ -57,8 +52,6 @@ class Package
      * Gets the name of the vendor.
      *
      * The Dragon Code
-     *
-     * @return string
      */
     public function vendor(): string
     {
@@ -69,8 +62,6 @@ class Package
      * Gets the name of the application.
      *
      * Docs Generator
-     *
-     * @return string
      */
     public function package(): string
     {
@@ -79,8 +70,6 @@ class Package
 
     /**
      * Returns an Preview instance.
-     *
-     * @return \DragonCode\DocsGenerator\Dto\Preview
      */
     public function preview(): Preview
     {

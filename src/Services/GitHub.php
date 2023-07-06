@@ -14,15 +14,10 @@ class GitHub
 {
     public function __construct(
         protected Client $client = new Client()
-    ) {
-    }
+    ) {}
 
     /**
      * Get a filtered list of repositories for the selected organization.
-     *
-     * @param string $organization
-     *
-     * @return array
      */
     public function repositories(string $organization): array
     {
@@ -31,10 +26,6 @@ class GitHub
 
     /**
      * Get the entire list of repositories for the selected organization.
-     *
-     * @param string $organization
-     *
-     * @return array
      */
     public function all(string $organization): array
     {
@@ -53,11 +44,6 @@ class GitHub
 
     /**
      * Clone repository for further processing.
-     *
-     * @param string $ssh_url
-     * @param string $directory
-     *
-     * @return void
      */
     public function download(string $ssh_url, string $directory): void
     {

@@ -20,10 +20,6 @@ class Composer
      * [
      *     'DragonCode\DocsGenerator\' => 'src'
      * ]
-     *
-     * @param string $directory
-     *
-     * @return array
      */
     public function namespaces(string $directory): array
     {
@@ -40,10 +36,6 @@ class Composer
      *     'DragonCode\DocsGenerator\Dto',
      *     'DragonCode\DocsGenerator\Enum',
      * ]
-     *
-     * @param string $directory
-     *
-     * @return array
      */
     public function ignoreNamespaces(string $directory): array
     {
@@ -54,10 +46,6 @@ class Composer
      * Gets the package description.
      *
      * Document generation assistant.
-     *
-     * @param string $directory
-     *
-     * @return string
      */
     public function description(string $directory): string
     {
@@ -68,10 +56,6 @@ class Composer
      * Gets the package full name from the composer.json file.
      *
      * dragon-code/docs-generator
-     *
-     * @param string $directory
-     *
-     * @return string
      */
     public function fullName(string $directory): string
     {
@@ -82,10 +66,6 @@ class Composer
      * Gets the name of the vendor.
      *
      * The Dragon Code
-     *
-     * @param string $directory
-     *
-     * @return string
      */
     public function vendor(string $directory): string
     {
@@ -99,10 +79,6 @@ class Composer
      * Gets the name of the application.
      *
      * Docs Generator
-     *
-     * @param string $directory
-     *
-     * @return string
      */
     public function package(string $directory): string
     {
@@ -131,10 +107,6 @@ class Composer
      * //
      * // For example,
      * //   docs-generator
-     *
-     * @param string $directory
-     *
-     * @return \DragonCode\DocsGenerator\Dto\Preview
      */
     public function preview(string $directory): Preview
     {

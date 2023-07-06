@@ -52,8 +52,6 @@ class PageProcessor extends Processor
     }
 
     /**
-     * @param Facade|string $namespace
-     *
      * @return array<ReflectionMethod>
      */
     protected function getMethods(Facade|string $namespace): array

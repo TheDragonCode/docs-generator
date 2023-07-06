@@ -13,15 +13,12 @@ class File
     public function __construct(
         protected string $prefix,
         protected string $namespace
-    ) {
-    }
+    ) {}
 
     /**
      * Receive a namespace.
      *
      * \DragonCode\DocsGenerator\Models\File
-     *
-     * @return string
      */
     public function getNamespace(): string
     {
@@ -32,8 +29,6 @@ class File
      * Receive display namespace.
      *
      * DragonCode\DocsGenerator\Models\File
-     *
-     * @return string
      */
     public function getShowNamespace(): string
     {
@@ -44,8 +39,6 @@ class File
      * Receive a generated path to markdown file.
      *
      * models/file.md
-     *
-     * @return string
      */
     public function getMarkdownFilename(): string
     {

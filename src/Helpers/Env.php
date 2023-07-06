@@ -19,11 +19,6 @@ class Env
      *
      * return Env::get('GITHUB_TOKEN')
      * // 02d95b05-0515-4480-91bf-37a7c86e2274
-     *
-     * @param string $key
-     * @param mixed|null $default
-     *
-     * @return mixed
      */
     public function get(string $key, mixed $default = null): mixed
     {

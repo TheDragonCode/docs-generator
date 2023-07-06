@@ -16,17 +16,12 @@ enum Message: string
 {
     use InvokableCases;
 
-    case CLEANUP = 'Pre-cleaning...';
-
+    case CLEANUP                = 'Pre-cleaning...';
     case RECEIVING_REPOSITORIES = 'Receiving repositories list...';
-
-    case PROCESSING_CLASS = 'Processing %s...';
-
-    case DOWNLOADING = 'Downloading %s...';
-
-    case INSTALLING = 'Installing %s...';
-
-    case GENERATING = 'Generating %s...';
+    case PROCESSING_CLASS       = 'Processing %s...';
+    case DOWNLOADING            = 'Downloading %s...';
+    case INSTALLING             = 'Installing %s...';
+    case GENERATING             = 'Generating %s...';
 
     #[Pure]
     public static function PROCESSING(string $class): string
