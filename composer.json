@@ -1,103 +1,103 @@
 {
-            "name": "dragon-code/docs-generator",
-            "description": "Document generation assistant.",
-            "license": "MIT",
-            "type": "library",
-            "keywords": [
-                        "dragon",
-                        "dragon-code",
-                        "generator",
-                        "docs",
-                        "documentation"
-            ],
-            "authors": [
-                        {
-                                    "name": "Andrey Helldar",
-                                    "email": "helldar@dragon-code.pro",
-                                    "homepage": "https://github.com/andrey-helldar"
-                        }
-            ],
-            "support": {
-                        "issues": "https://github.com/TheDragonCode/docs-generator/issues",
-                        "source": "https://github.com/TheDragonCode/docs-generator"
-            },
-            "funding": [
-                        {
-                                    "type": "github",
-                                    "url": "https://github.com/sponsors/TheDragonCode"
-                        },
-                        {
-                                    "type": "open_collective",
-                                    "url": "https://opencollective.com/dragon-code"
-                        },
-                        {
-                                    "type": "boosty",
-                                    "url": "https://boosty.to/dragon-code"
-                        },
-                        {
-                                    "type": "yoomoney",
-                                    "url": "https://yoomoney.ru/to/410012608840929"
-                        },
-                        {
-                                    "type": "donationalerts",
-                                    "url": "https://www.donationalerts.com/r/dragon_code"
-                        }
-            ],
-            "require": {
-                        "php": "^8.1",
-                        "archtechx/enums": "^0.3.0",
-                        "dragon-code/simple-dto": "^2.3",
-                        "dragon-code/support": "^6.0",
-                        "guzzlehttp/guzzle": "^7.4",
-                        "http-interop/http-factory-guzzle": "^1.2",
-                        "knplabs/github-api": "^3.6",
-                        "phpdocumentor/reflection-docblock": "^5.3",
-                        "symfony/console": "^6.0",
-                        "vlucas/phpdotenv": "^5.4"
-            },
-            "require-dev": {
-                        "phpunit/phpunit": "^9.5"
-            },
-            "minimum-stability": "stable",
-            "prefer-stable": true,
-            "autoload": {
-                        "psr-4": {
-                                    "DragonCode\\DocsGenerator\\": "src"
-                        }
-            },
-            "autoload-dev": {
-                        "psr-4": {
-                                    "Tests\\": "tests"
-                        }
-            },
-            "bin": [
-                        "bin/docs"
-            ],
-            "config": {
-                        "allow-plugins": {
-                                    "dragon-code/codestyler": true,
-                                    "ergebnis/composer-normalize": true,
-                                    "friendsofphp/php-cs-fixer": true,
-                                    "symfony/thanks": true,
-                                    "php-http/discovery": true
-                        },
-                        "preferred-install": "dist",
-                        "sort-packages": true
-            },
-            "extra": {
-                        "dragon-code": {
-                                    "docs-generator": {
-                                                "ignore": [
-                                                            "DragonCode\\DocsGenerator\\Console",
-                                                            "DragonCode\\DocsGenerator\\Dto",
-                                                            "DragonCode\\DocsGenerator\\Enum",
-                                                            "DragonCode\\DocsGenerator\\Processors"
-                                                ],
-                                                "preview": {
-                                                            "brand": "php",
-                                                            "vendor": "The Dragon Code"
-                                                }
-                                    }
-                        }
+    "name": "dragon-code/docs-generator",
+    "description": "Document generation assistant.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "dragon",
+        "dragon-code",
+        "generator",
+        "docs",
+        "documentation"
+    ],
+    "authors": [
+        {
+            "name": "Andrey Helldar",
+            "email": "helldar@dragon-code.pro",
+            "homepage": "https://github.com/andrey-helldar"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/TheDragonCode/docs-generator/issues",
+        "source": "https://github.com/TheDragonCode/docs-generator"
+    },
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/TheDragonCode"
+        },
+        {
+            "type": "open_collective",
+            "url": "https://opencollective.com/dragon-code"
+        },
+        {
+            "type": "boosty",
+            "url": "https://boosty.to/dragon-code"
+        },
+        {
+            "type": "yoomoney",
+            "url": "https://yoomoney.ru/to/410012608840929"
+        },
+        {
+            "type": "donationalerts",
+            "url": "https://www.donationalerts.com/r/dragon_code"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "archtechx/enums": "^0.3.0",
+        "dragon-code/simple-dto": "^2.3",
+        "dragon-code/support": "^6.0",
+        "guzzlehttp/guzzle": "^7.4",
+        "http-interop/http-factory-guzzle": "^1.2",
+        "knplabs/github-api": "^3.6",
+        "phpdocumentor/reflection-docblock": "^5.3",
+        "symfony/console": "^6.0",
+        "vlucas/phpdotenv": "^5.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "DragonCode\\DocsGenerator\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests"
+        }
+    },
+    "bin": [
+        "bin/docs"
+    ],
+    "config": {
+        "allow-plugins": {
+            "dragon-code/codestyler": true,
+            "ergebnis/composer-normalize": true,
+            "friendsofphp/php-cs-fixer": true,
+            "symfony/thanks": true,
+            "php-http/discovery": true
+        },
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "extra": {
+        "dragon-code": {
+            "docs-generator": {
+                "ignore": [
+                    "DragonCode\\DocsGenerator\\Console",
+                    "DragonCode\\DocsGenerator\\Dto",
+                    "DragonCode\\DocsGenerator\\Enum",
+                    "DragonCode\\DocsGenerator\\Processors"
+                ],
+                "preview": {
+                    "brand": "php",
+                    "vendor": "The Dragon Code"
+                }
             }
+        }
+    }
 }
